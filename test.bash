@@ -45,3 +45,4 @@ az container create \
     --dns-name-label acr-tasks-$ACR_NAME \
     --query "{FQDN:ipAddress.fqdn}" \
     --output table
+    
