@@ -1,13 +1,12 @@
 ACR_NAME=xyz2020
 GIT_USER=svr8
-TASK_NAME=flasktask
 
 git pull origin master
 
 RES_GROUP=$ACR_NAME # Resource Group name
 az group create --resource-group $RES_GROUP --location eastus
 az acr create --resource-group $RES_GROUP --name $ACR_NAME --sku Standard --location eastus
-az acr build --registry $ACR_NAME --image $TASK_NAME:v1 .
+az acr build --registry $ACR_NAME --image helloacrtasks:v1 .
 
 # Registry authentication
 AKV_NAME=$ACR_NAME-vault
@@ -35,11 +34,12 @@ az keyvault secret set \
     --vault-name $AKV_NAME \
     --name $ACR_NAME-pull-usr \
     --value $(az ad sp show --id http://$ACR_NAME-pull --query appId --output tsv)
+    
 # Deploy a container with Azure CLI
 az container create \
     --resource-group $RES_GROUP \
     --name acr-tasks \
-    --image $ACR_NAME.azurecr.io/$TASK_NAME:v1 \
+    --image $ACR_NAME.azurecr.io/helloacrtasks:v1 \
     --registry-login-server $ACR_NAME.azurecr.io \
     --registry-username $(az keyvault secret show --vault-name $AKV_NAME --name $ACR_NAME-pull-usr --query value -o tsv) \
     --registry-password $(az keyvault secret show --vault-name $AKV_NAME --name $ACR_NAME-pull-pwd --query value -o tsv) \
