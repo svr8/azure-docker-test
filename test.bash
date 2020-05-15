@@ -1,5 +1,4 @@
 ACR_NAME=xyz2020
-GIT_USER=svr8
 
 git pull origin master
 
