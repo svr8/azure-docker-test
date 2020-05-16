@@ -7,7 +7,7 @@ steps:
   id: test
   detach: true
   ports: ["8080:80"]
-- cmd: docker stop test
+# - cmd: docker stop test
 # Push image
 - push:
   - {{.Run.Registry}}/hello-world:{{.Run.ID}}
